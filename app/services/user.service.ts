@@ -11,11 +11,11 @@ export const register = async (user: SchemaDefinition<IUser>): Promise<Boolean> 
   }
 }
 
-export const login = async (user: SchemaDefinition<IUser>): Promise<Boolean> => {
+export const login = async (user: SchemaDefinition<IUser>): Promise<IUser|null> => {
   try {
     const res = await User.findOne({ name: user.username, password: user.password });
     res != null && console.log(res.username + " is found");
-    return res != null;
+    return res;
   } catch (err) {
     throw err;
   }
