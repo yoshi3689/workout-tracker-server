@@ -11,7 +11,7 @@ export const authorize = async (req: Request, res: Response, next: NextFunction)
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-      throw new Error("token not resent in the request");
+      throw new Error("token not present in the request");
     }
     
     const tokenDecoded = jwt.verify(token, SECRET);
