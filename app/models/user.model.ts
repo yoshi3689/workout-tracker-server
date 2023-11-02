@@ -1,9 +1,10 @@
 import { Schema, model, Types } from "mongoose";
+import bcrypt from "bcrypt";
 
 interface IUser {
-  username: String;
-  email: String;
-  password: String;
+  username: string;
+  email: string;
+  password: string;
   createdAt: Date;
   lastActiveAt: Date;
   routines: Types.ObjectId;
@@ -26,6 +27,17 @@ const userSchema = new Schema<IUser>({
     type: Schema.Types.ObjectId,
     ref: "Role",
   },
+});
+
+
+const saltRounds = 8
+
+userSchema.pre('save', async function (next) {
+ const user = this;
+ if (user.isModified('password')) {
+   user.password = await bcrypt.hash(user.password, saltRounds);
+ }
+ next();
 });
 
 export const User = model<IUser>(
