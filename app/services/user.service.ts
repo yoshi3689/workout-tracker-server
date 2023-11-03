@@ -1,7 +1,6 @@
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
 import { sign } from "jsonwebtoken";
-import { SECRET } from "../middlewares/verifyToken";
 
 export interface SignedInUser {
   user: IUser;
@@ -15,24 +14,23 @@ export const register = async (user: IUser): Promise<Boolean> => {
       ...user,
       createdAt: now,
       lastActiveAt: now,
-      routines: []
+      routines: null
     });
-    console.log(res.username + " is created");
+    console.log(res);
     return res != null;
   } catch (err) {
+    console.log(err)
     throw err;
   }
 }
 
 export const login = async (user: IUser): Promise<SignedInUser> => {
   try {
-    const res = await User.findOne({ name: user.username });
+    const res = await User.findOne({ username: user.username });
     
     if (!res) {
       throw new Error("Name of user is not correct");
     }
-    console.log(res.username + " is found");
-
     const isMatch = compareSync(user.password, res.password);
     if (!isMatch) {
       throw new Error("password incorrect");
@@ -41,8 +39,8 @@ export const login = async (user: IUser): Promise<SignedInUser> => {
     // TODO: update lastActiveAt to the current datetime
 
     const token = sign(
-      { _id: res._id?.toString(), name: res.username },
-      SECRET,
+      { _id: res._id?.toString(), username: res.username },
+      process.env.JWTSECRET,
       {
         expiresIn: "2 days",
       }

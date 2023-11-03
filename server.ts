@@ -6,10 +6,12 @@ import mongoose from 'mongoose';
 import { initial } from './app/models/role.model';
 import dotenv from "dotenv";
 
+import router from './app/routes/user.route';
+
 dotenv.config()
 
 const corsOptions: CorsOptions = {
-  origin: "http://localhost:3000",
+  origin: "*",
 };
 
 const app: Application = express();
@@ -18,6 +20,7 @@ const app: Application = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(router);
 
 mongoose
   .connect(process.env.URL)
