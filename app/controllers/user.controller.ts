@@ -3,7 +3,7 @@ import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
 import { CustomRequest } from '../middlewares/verifyToken';
 
-export const loginOne = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   let foundUser = null;
   try {
     foundUser = await userServices.login(req.body);
@@ -14,7 +14,7 @@ export const loginOne = async (req: Request, res: Response) => {
   }
 };
 
-export const registerOne = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     await userServices.register(req.body);
     res.status(200).send("Inserted successfully");
