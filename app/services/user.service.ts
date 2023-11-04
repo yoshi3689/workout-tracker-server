@@ -26,17 +26,23 @@ export const register = async (user: IUser): Promise<Boolean> => {
 
 export const login = async (user: IUser): Promise<SignedInUser> => {
   try {
-    const res = await User.findOne({ username: user.username });
+    const res = await User.findOneAndUpdate(
+      { username: user.username },
+      { $set: { lastActiveAt: new Date() } },
+      {
+        new: true
+      }
+      );
     
     if (!res) {
-      throw new Error("Name of user is not correct");
+      throw new Error("username incorrect");
     }
     const isMatch = compareSync(user.password, res.password);
     if (!isMatch) {
       throw new Error("password incorrect");
     }
 
-    // TODO: update lastActiveAt to the current datetime
+    // TODO: how to make a column unchangeable once the document is created??
 
     const token = sign(
       { _id: res._id?.toString(), username: res.username },

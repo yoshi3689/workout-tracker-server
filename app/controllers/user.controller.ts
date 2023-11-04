@@ -27,3 +27,16 @@ export const register = async (req: Request, res: Response) => {
     return res.status(500).send(getErrorMessage(error));
   }
 };
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    await userServices.register(req.body);
+    console.log(req.body)
+    res.status(200).send("Inserted successfully");
+    // TODO: research the best practice for letting user log in after registration
+    // const foundUser = await userServices.login(req.body);
+    // res.status(200).send(foundUser);
+  } catch (error) {
+    return res.status(500).send(getErrorMessage(error));
+  }
+};
