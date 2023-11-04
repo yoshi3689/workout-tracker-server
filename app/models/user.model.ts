@@ -7,6 +7,7 @@ export interface IUser {
   password: string;
   createdAt: Date;
   lastActiveAt: Date;
+  isEmailVerified: boolean;
   routines: Types.ObjectId;
   roles: Types.ObjectId
 };
@@ -19,6 +20,7 @@ const userSchema = new Schema<IUser>({
   password: String,
   createdAt: Date,
   lastActiveAt: Date,
+  isEmailVerified: { type: Boolean, default: false },
   routines: {
     type: Schema.Types.ObjectId,
     ref: "routines",

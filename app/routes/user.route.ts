@@ -6,7 +6,6 @@ const router = Router();
 
 router.post("/register", checkDuplicateUsernameOrEmail ,userController.register);
 router.post("/login", userController.login);
-router.get("/register", );
-router.get("/login", );
+router.get("/verify-email/:username", userController.verifyEmail);
 
 export default router;
