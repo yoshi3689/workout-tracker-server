@@ -8,9 +8,13 @@ export const login = async (req: Request, res: Response) => {
   let foundUser = null;
   try {
     foundUser = await userServices.login(req.body);
-    console.log(foundUser)
-    if (foundUser) res.status(200).send(foundUser);
-    else res.status(403).send(foundUser);
+    // console.log(foundUser)
+    if (!foundUser) res.status(403).send(foundUser);
+    res.cookie('jwt', foundUser.token, {
+      maxAge: 1 * 24 * 60 * 60,
+      httpOnly: true
+    });
+    res.status(201).send(foundUser.user);
   } catch (error) {
     return res.status(500).send(getErrorMessage(error));
   }
@@ -38,15 +42,14 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const verifyEmail = async (req: Request, res: Response) => {
-  res.status(200).send({ message: "this is verification route" });
-  // try {
-  //   await userServices.register(req.body);
-  //   console.log(req.body)
-  //   res.status(200).send("Inserted successfully");
-  //   // TODO: research the best practice for letting user log in after registration
-  //   // const foundUser = await userServices.login(req.body);
-  //   // res.status(200).send(foundUser);
-  // } catch (error) {
-  //   return res.status(500).send(getErrorMessage(error));
-  // }
+  try {
+    const username = req.params.username;
+
+    //find user by username and update isEmailVerified to true
+    await userServices.emailVerify(username);
+    return res.status(200).send({ message: "your email is verified! Proceed to login" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send(getErrorMessage(error));
+  }
 };
