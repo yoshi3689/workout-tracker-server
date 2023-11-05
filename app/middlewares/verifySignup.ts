@@ -25,6 +25,11 @@ export const checkDuplicateUsernameOrEmail = async (req: Request, res: Response,
   next();
 };
 
+// export const checkPasswordAndUsernameRules = async (req: Request, res: Response, next: NextFunction) => { 
+
+//   next();
+// }
+
 export const checkRolesExisted = (req: Request, res: Response, next: NextFunction) => {
   if (req.body.roles) {
     for (let i = 0; i < req.body.roles.length; i++) {
