@@ -1,20 +1,29 @@
 import { Request, Response } from 'express';
 import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
-import { CustomRequest } from '../middlewares/verifyToken';
+// import { CustomRequest } from '../middlewares/verifyToken';
 import { sendEmail } from '../utils/sendEmail';
+// import jwt, { JwtPayload } from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
+  //TODO: Upon user arriving at the login route, how do i let user redirect to the homepage when they have the token?
+  // if (req.cookies['jwt']) {
+  //   const token = req.cookies['jwt'];
+  //   const decoded = jwt.verify(token, process.env.JWTSECRET);
+  //   res.redirect("/" + decoded);
+  // }
   let foundUser = null;
   try {
     foundUser = await userServices.login(req.body);
     // console.log(foundUser)
-    if (!foundUser) res.status(403).send(foundUser);
-    res.cookie('jwt', foundUser.token, {
+    if (!foundUser) return res.status(403).send(foundUser);
+
+    res.cookie("jwt", foundUser.token, {
       maxAge: 1 * 24 * 60 * 60,
-      httpOnly: true
+      httpOnly: true,
     });
     res.status(201).send(foundUser.user);
+    // res.redirect("/" + foundUser.user.username);
   } catch (error) {
     return res.status(500).send(getErrorMessage(error));
   }

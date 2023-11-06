@@ -3,9 +3,9 @@ import * as userController from "../controllers/user.controller";
 import { checkDuplicateUsernameOrEmail } from "../middlewares/verifySignup";
 import { body } from "express-validator"
 
-const router = Router();
+const userRouter = Router();
 
-router.post(
+userRouter.post(
   "/register",
   //TODO: come up with decent validation rules
   body("username").isLength({ min: 5 }).isAlphanumeric(),
@@ -14,7 +14,7 @@ router.post(
   checkDuplicateUsernameOrEmail,
   userController.register
 );
-router.post("/login", userController.login);
-router.get("/verify-email/:username", userController.verifyEmail);
+userRouter.post("/login", userController.login);
+userRouter.get("/verify-email/:username", userController.verifyEmail);
 
-export default router;
+export default userRouter;

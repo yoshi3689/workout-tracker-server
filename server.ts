@@ -7,7 +7,8 @@ import mongoose from 'mongoose';
 import { initial } from './app/models/role.model';
 import dotenv from "dotenv";
 
-import router from './app/routes/user.route';
+import userRouter from './app/routes/user.route';
+import routineRouter from './app/routes/routine.route';
 
 dotenv.config()
 
@@ -21,10 +22,12 @@ const app: Application = express();
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());p
+app.use(cookieParser());
 // app.use(helmet())
-app.use(router);
+app.use(userRouter);
+app.use(routineRouter);
 
+console.log(routineRouter.stack)
 mongoose
   .connect(process.env.URL)
   .then(() => {
@@ -36,13 +39,13 @@ mongoose
     process.exit();
   });
 
-app.get("/api", (req, res) => {
-  res.json("this is api route");
-});
+// app.get("/api", (req, res) => {
+//   res.json("this is api route");
+// });
 
-app.get("/api/exercises", (req, res) => {
-  res.json(exercises);
-});
+// app.get("/api/exercises", (req, res) => {
+//   res.json(exercises);
+// });
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on`);
