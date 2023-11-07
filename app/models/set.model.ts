@@ -6,7 +6,7 @@ interface ISet {
   rest: number;
 }
 
-const SetSchema = new Schema<ISet>({
+export const SetSchema = new Schema<ISet>({
   rep: { type: Number, required: true },
   weight: { type: Number, required: true },
   rest: { type: Number},
