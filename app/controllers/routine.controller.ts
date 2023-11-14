@@ -8,7 +8,7 @@ export const getRoutines = async (req: Request, res: Response) => {
     console.log(username, req.body);
     // find user by username
     // 
-    res.status(200).send({ message: "getting all past workout routines (:" });
+    res.status(200).send({ message: "getting all past workout routines (:" },);
 
   } catch (error) {
     console.log(error);

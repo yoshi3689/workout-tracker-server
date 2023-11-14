@@ -13,7 +13,8 @@ import routineRouter from './app/routes/routine.route';
 dotenv.config()
 
 const corsOptions: CorsOptions = {
-  origin: "*",
+  origin: "http://localhost:3000",
+  credentials: true,
 };
 
 const app: Application = express();

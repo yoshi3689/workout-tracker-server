@@ -18,7 +18,7 @@ export const login = async (req: Request, res: Response) => {
     // console.log(foundUser)
     if (!foundUser) return res.status(403).send(foundUser);
 
-    res.cookie("jwt", foundUser.token, {
+    res.cookie("Authorization", foundUser.token, {
       maxAge: 1 * 24 * 60 * 60,
       httpOnly: true,
     });

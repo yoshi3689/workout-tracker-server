@@ -9,17 +9,24 @@ export interface CustomRequest extends Request {
 
 export const authorize = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    // THE BELOW IS HOW TO ACCESS 'Authorization' cookie
+    // i was accessing the authorization header the entire time
+    const token = req.cookies['Authorization']
+    console.log(req.cookies);
+    console.log(process.env.JWTSECRET, SECRET);
+
     if (!token) {
       throw new Error("token not present in the request");
+    } else {
+      const tokenDecoded = jwt.verify(token, process.env.JWTSECRET);
+      (req as CustomRequest).token = tokenDecoded;
+      next();
     }
-    
-    const tokenDecoded = jwt.verify(token, SECRET);
-    (req as CustomRequest).token = tokenDecoded;
-    next();
   } catch (err) {
-    res.status(401).send("You were not authenticated");
+    console.log(err);
+    res.status(401).send(["You were not authenticated"]);
   }
+  
 }
 // const 
 // const config = require("../config/auth.config.js");
