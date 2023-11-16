@@ -17,7 +17,6 @@ export const register = async (user: IUser): Promise<Boolean> => {
       lastActiveAt: now,
       routines: null,
     });
-    console.log(res);
     return res != null;
   } catch (err) {
     console.log(err)
@@ -54,8 +53,6 @@ export const login = async (user: IUser): Promise<SignedInUser> => {
         expiresIn: "2 days",
       }
     );
-    // res.password = "";
-    console.log(token);
     return { user: res, token };
   } catch (err) {
     throw err;

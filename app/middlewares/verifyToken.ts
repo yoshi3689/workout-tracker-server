@@ -11,9 +11,7 @@ export const authorize = async (req: Request, res: Response, next: NextFunction)
   try {
     // THE BELOW IS HOW TO ACCESS 'Authorization' cookie
     // i was accessing the authorization header the entire time
-    const token = req.cookies['Authorization']
-    console.log(req.cookies);
-    console.log(process.env.JWTSECRET, SECRET);
+    const token = req.cookies['jwt']
 
     if (!token) {
       throw new Error("token not present in the request");

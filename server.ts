@@ -1,5 +1,4 @@
 import express, { Application } from 'express'
-import exercises from "../exercises.json";
 import cors, { CorsOptions } from 'cors';
 import cookieParser from "cookie-parser";
 // import helmet from 'helmet';
@@ -8,6 +7,7 @@ import { initial } from './app/models/role.model';
 import dotenv from "dotenv";
 
 import userRouter from './app/routes/user.route';
+import exerciseRouter from './app/routes/exercise.route';
 import routineRouter from './app/routes/routine.route';
 
 dotenv.config()
@@ -25,10 +25,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 // app.use(helmet())
-app.use(userRouter);
-app.use(routineRouter);
+const common_prefix = "/api"
+app.use(common_prefix, userRouter);
+app.use(common_prefix,routineRouter);
+app.use(common_prefix, exerciseRouter);
 
-console.log(routineRouter.stack)
 mongoose
   .connect(process.env.URL)
   .then(() => {
