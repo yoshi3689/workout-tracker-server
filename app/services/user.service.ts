@@ -1,6 +1,5 @@
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
-import { sign } from "jsonwebtoken";
 
 export interface SignedInUser {
   user: IUser;
@@ -24,7 +23,17 @@ export const register = async (user: IUser): Promise<Boolean> => {
   }
 }
 
-export const login = async (user: IUser): Promise<SignedInUser> => {
+export const findByUsername = async (username: string): Promise<IUser> => {
+  try {
+    const res = await User.findOne({ username });
+    if (!res) throw new Error("user not found");
+    return res 
+  } catch (err) {
+    throw err;
+  }
+}
+
+export const login = async (user: IUser): Promise<IUser> => {
   try {
     const res = await User.findOneAndUpdate(
       { username: user.username },
@@ -45,15 +54,7 @@ export const login = async (user: IUser): Promise<SignedInUser> => {
     if (!res.isEmailVerified) {
       throw new Error("Your email address is not verified yet. Check ur inbox for the verification email");
     }
-
-    const token = sign(
-      { _id: res._id?.toString(), username: res.username },
-      process.env.JWTSECRET,
-      {
-        expiresIn: "2 days",
-      }
-    );
-    return { user: res, token };
+    return res;
   } catch (err) {
     throw err;
   }

@@ -2,6 +2,7 @@ import { Router } from "express";
 import * as userController from "../controllers/user.controller";
 import { checkDuplicateUsernameOrEmail } from "../middlewares/verifySignup";
 import { body } from "express-validator"
+import { authorize } from "../middlewares/verifyToken";
 
 const userRouter = Router();
 
@@ -15,6 +16,9 @@ userRouter.post(
   userController.register
 );
 userRouter.post("/login", userController.login);
+userRouter.get("/refresh", userController.refresh);
+
+userRouter.post("/logout", userController.login);
 userRouter.get("/verify-email/:username", userController.verifyEmail);
 
 export default userRouter;

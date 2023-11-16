@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
 import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
+import { sign } from "jsonwebtoken";
+import jwt, { Secret, JwtPayload } from "jsonwebtoken";
+
 // import { CustomRequest } from '../middlewares/verifyToken';
 import { sendEmail } from '../utils/sendEmail';
+import { CustomRequest } from '../middlewares/verifyToken';
 // import jwt, { JwtPayload } from "jsonwebtoken";
 
 export const login = async (req: Request, res: Response) => {
@@ -10,15 +14,66 @@ export const login = async (req: Request, res: Response) => {
   try {
     foundUser = await userServices.login(req.body);
     if (!foundUser) return res.status(403).send(foundUser);
-
-    res.cookie("jwt", foundUser.token,
-      { httpOnly: true, sameSite: 'none', secure: true, maxAge: 24 * 60 * 60 * 1000 }
+    const accessToken = sign(
+      { username: foundUser.username },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1m" }
     );
-    res.status(201).send(foundUser.user);
+
+    const refreshToken = sign(
+      {
+        username: foundUser.username
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "1 day",
+      }
+    );
+
+
+    res.cookie("jwt", refreshToken, {
+      httpOnly: true,
+      sameSite: 'none',
+      secure: true,
+      maxAge: 1 * 24 * 60 * 60 * 1000
+    }
+    );
+    return res.status(201).send({accessToken});
   } catch (error) {
     return res.status(500).send(getErrorMessage(error));
   }
 };
+
+export const refresh = async (req: Request, res: Response) => {
+  try {
+    // THE BELOW IS HOW TO ACCESS 'Authorization' cookie
+    // i was accessing the authorization header the entire time
+    const cookies = req.cookies;
+
+    if (!cookies?.jwt) {
+      throw new Error("refresh token not present in the request");
+    } 
+    
+    const tokenDecoded = jwt.verify(
+      cookies.jwt,
+      process.env.REFRESH_TOKEN_SECRET
+    );
+
+    console.log("this is refresh token decoded", tokenDecoded)
+    
+    const accessToken = sign(
+      {username:(tokenDecoded as CustomRequest).username},
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "1m" }
+    );
+
+    res.status(201).send(accessToken);
+  
+  } catch (err) {
+    console.log(err);
+    res.status(401).send(["You were not authenticated"]);
+  }
+}
 
 export const register = async (req: Request, res: Response) => {
   try {

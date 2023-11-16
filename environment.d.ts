@@ -4,6 +4,7 @@ namespace NodeJS {
     NODE_ENV: "development" | "production";
     PORT?: string;
     PWD: string;
-    JWTSECRET: string;
+    ACCESS_TOKEN_SECRET: string;
+    REFRESH_TOKEN_SECRET: string;
   }
 }
