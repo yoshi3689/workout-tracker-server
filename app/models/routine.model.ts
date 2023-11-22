@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { ExerciseSchema } from "./exercise.model"
 
-interface IRoutine {
+export interface IRoutine {
   name: string;
   createdAt: Date;
   isEditing: boolean;
