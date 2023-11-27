@@ -7,8 +7,8 @@ const routineRouter = Router();
 
 routineRouter.use(authorize);
 
-routineRouter.get("/dashboard/:username", getRoutines);
-routineRouter.get("/routines/", getRoutines);
+// routineRouter.get("/dashboard/:username", getRoutines);
+routineRouter.get("/routines/:username", getRoutines);
 routineRouter.post("/routines/", createRoutine);
 
 export default routineRouter

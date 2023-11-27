@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
-import { add } from '../services/routine.service';
+import { create, getAll } from '../services/routine.service';
 
 export const getRoutines = async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
+
     // find user by username
-    // 
-    res.status(200).send({ message: "getting all past workout routines (:" },);
+    const routines = await getAll(username);
+    console.log(routines, req.params);
+    res.status(200).send(routines);
 
   } catch (error) {
     console.log(error);
@@ -19,7 +21,7 @@ export const getRoutines = async (req: Request, res: Response) => {
 export const createRoutine = async (req: Request, res: Response) => {
   try {
     res.status(200).send({ message: "created a new routine" },);
-    add(req.body);
+    create(req.body);
   } catch (error) {
     console.log(error);
     return res.status(500).send(getErrorMessage(error));

@@ -64,7 +64,7 @@ export const refresh = async (req: Request, res: Response) => {
     const accessToken = sign(
       {username:(tokenDecoded as CustomRequest).username},
       process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "1m" }
+      { expiresIn: "10m" }
     );
 
     res.status(201).send(accessToken);
