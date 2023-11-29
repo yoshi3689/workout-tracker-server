@@ -19,19 +19,19 @@ export const initial = async() => {
       name: "user",
     })
       .save()
-      .then((res) => console.log(res));
+      .then((res) => console.debug(res));
 
     new Role({
       name: "moderator",
     })
       .save()
-      .then((res) => console.log(res));
+      .then((res) => console.debug(res));
 
     new Role({
       name: "admin",
     })
       .save()
-      .then((res) => console.log(res));
+      .then((res) => console.debug(res));
   }
 }
 

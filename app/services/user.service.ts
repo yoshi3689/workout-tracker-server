@@ -18,7 +18,7 @@ export const register = async (user: IUser): Promise<Boolean> => {
     });
     return res != null;
   } catch (err) {
-    console.log(err)
+    console.error(err)
     throw err;
   }
 }

@@ -9,22 +9,20 @@ export const getRoutines = async (req: Request, res: Response) => {
 
     // find user by username
     const routines = await getAll(username);
-    // console.log(routines, req.params);
     res.status(200).send(routines);
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(getErrorMessage(error));
   }
 };
 
 export const createRoutine = async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
     res.status(200).send({ message: "created a new routine" },);
     create(req.body);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(getErrorMessage(error));
   }
 };

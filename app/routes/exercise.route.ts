@@ -10,7 +10,7 @@ exerciseRouter.get("/exercises", (req: Request, res: Response) => {
     res.json(exercises).status(200);
 
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(getErrorMessage(error));
   }
 }

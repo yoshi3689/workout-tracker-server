@@ -2,7 +2,6 @@ import { Routine, IRoutine } from "../models/routine.model"
 
 export const create = async (routine: IRoutine): Promise<Boolean> => {
   try {
-    console.log(routine.exercises)
     const res = await Routine.create({
       name: routine.name,
       username: routine.username,
@@ -13,20 +12,19 @@ export const create = async (routine: IRoutine): Promise<Boolean> => {
     
     return res != null;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 }
 
 export const getAll = async (username: string): Promise<IRoutine[]> => {
-  console.log(username)
   try {
     const res = await Routine.find({
       username,
     });
     return res;
   } catch (err) {
-    console.log(err);
+    console.error(err);
     throw err;
   }
 }

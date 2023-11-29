@@ -19,7 +19,7 @@ export const checkDuplicateUsernameOrEmail = async (req: Request, res: Response,
     return;
   }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).send({ message: "Server error" });
   }
   next();

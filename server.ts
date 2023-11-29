@@ -41,14 +41,6 @@ mongoose
     process.exit();
   });
 
-// app.get("/api", (req, res) => {
-//   res.json("this is api route");
-// });
-
-// app.get("/api/exercises", (req, res) => {
-//   res.json(exercises);
-// });
-
 app.listen(process.env.PORT, () => {
   console.log(`listening on`);
 });

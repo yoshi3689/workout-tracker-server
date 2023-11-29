@@ -58,8 +58,6 @@ export const refresh = async (req: Request, res: Response) => {
       cookies.jwt,
       process.env.REFRESH_TOKEN_SECRET
     );
-
-    console.log("this is refresh token decoded", tokenDecoded)
     
     const accessToken = sign(
       {username:(tokenDecoded as CustomRequest).username},
@@ -70,7 +68,7 @@ export const refresh = async (req: Request, res: Response) => {
     res.status(201).send(accessToken);
   
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(401).send(["You were not authenticated"]);
   }
 }
@@ -103,7 +101,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     await userServices.emailVerify(username);
     return res.status(200).send({ message: "your email is verified! Proceed to login" });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send(getErrorMessage(error));
   }
 };

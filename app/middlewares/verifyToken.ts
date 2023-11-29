@@ -24,7 +24,7 @@ export const authorize = async (req: Request, res: Response, next: NextFunction)
     (req as CustomRequest).token = tokenDecoded;
     next();
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(403).send("Forbidden");
   }
   
