@@ -9,7 +9,7 @@ export const getRoutines = async (req: Request, res: Response) => {
 
     // find user by username
     const routines = await getAll(username);
-    console.log(routines, req.params);
+    // console.log(routines, req.params);
     res.status(200).send(routines);
 
   } catch (error) {
@@ -20,6 +20,7 @@ export const getRoutines = async (req: Request, res: Response) => {
 
 export const createRoutine = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     res.status(200).send({ message: "created a new routine" },);
     create(req.body);
   } catch (error) {

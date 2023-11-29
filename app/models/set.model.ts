@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-interface ISet {
+export interface ISet {
   rep: number;
   weight: number;
   rest: number;

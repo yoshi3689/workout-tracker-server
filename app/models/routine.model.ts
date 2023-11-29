@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
-import { ExerciseSchema } from "./exercise.model"
+import { ExerciseSchema, IExercise } from "./exercise.model"
 
 export interface IRoutine {
   name: string;
   username: string;
   createdAt: Date;
   isEditing: boolean;
-  exercises: [typeof ExerciseSchema];
+  exercises: IExercise[];
 }
 
 const RoutineSchema = new Schema<IRoutine>({
@@ -14,7 +14,7 @@ const RoutineSchema = new Schema<IRoutine>({
   username: String,
   createdAt: Date,
   isEditing: Boolean,
-  exercises: { type: [Schema.Types.ObjectId] }
+  exercises: [ExerciseSchema]
 });
 
 export const Routine = model(

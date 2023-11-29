@@ -1,15 +1,15 @@
 import { Schema, model } from "mongoose";
-import { SetSchema } from "./set.model"
-interface IExercise {
+import { SetSchema, ISet } from "./set.model"
+export interface IExercise {
   name: string;
-  muscleGroups: [string];
-  sets: [typeof SetSchema];
+  muscleGroups: string[];
+  sets: ISet[];
 }
 
 export const ExerciseSchema = new Schema<IExercise>({
   name: { type: String, required: true },
   muscleGroups: { type: [String]},
-  sets: { type: [Schema.Types.ObjectId] }
+  sets: [SetSchema]
 });
 
 export const Exercise = model(
