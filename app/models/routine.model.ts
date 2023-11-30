@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { ExerciseSchema, IExercise } from "./exercise.model"
 
 export interface IRoutine {
+  _id: string;
   name: string;
   username: string;
   createdAt: Date;
@@ -10,6 +11,7 @@ export interface IRoutine {
 }
 
 const RoutineSchema = new Schema<IRoutine>({
+  _id: Schema.Types.ObjectId,
   name: { type: String },
   username: String,
   createdAt: Date,
