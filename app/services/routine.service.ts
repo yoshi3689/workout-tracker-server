@@ -3,7 +3,7 @@ import { Routine, IRoutine } from "../models/routine.model"
 export const create = async (routine: IRoutine): Promise<Boolean> => {
   try {
     const res = await Routine.create({
-      ...routine, _id: ""
+      ...routine, _id: null
     });
     
     return res != null;
@@ -22,7 +22,6 @@ export const update = async (routine: IRoutine): Promise<Boolean> => {
         isEditing: routine.isEditing, 
         exercises: routine.exercises
     });
-    
     return res != null;
   } catch (err) {
     console.error(err);

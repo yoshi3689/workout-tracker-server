@@ -12,7 +12,7 @@ export interface IRoutine {
 
 const RoutineSchema = new Schema<IRoutine>({
   _id: Schema.Types.ObjectId,
-  name: { type: String },
+  name: { type: String, required:true },
   username: String,
   createdAt: Date,
   isEditing: Boolean,
