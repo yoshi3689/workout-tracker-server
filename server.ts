@@ -42,6 +42,6 @@ mongoose
   });
 
 app.listen(process.env.PORT, () => {
-  console.log(`listening on`);
+  console.log(`listening on ${process.env.PORT}`);
 });
 

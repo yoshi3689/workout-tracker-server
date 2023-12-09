@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "dev": "nodemon ./build/server.js",
-    "start": "tsc && npm run dev"
+    "start": "npm run build && node build/server.js"
   },
   "author": "",
   "license": "ISC",
