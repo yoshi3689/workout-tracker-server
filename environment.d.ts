@@ -1,6 +1,7 @@
 namespace NodeJS {
   interface ProcessEnv {
     URL: string;
+    CORS_URL: string;
     NODE_ENV: "development" | "production";
     PORT?: string;
     PWD: string;
