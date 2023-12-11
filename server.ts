@@ -1,7 +1,6 @@
 import express, { Application } from 'express'
-import cors, { CorsOptions } from 'cors';
+import cors from 'cors';
 import cookieParser from "cookie-parser";
-// import helmet from 'helmet';
 import mongoose from 'mongoose';
 import { initial } from './app/models/role.model';
 import dotenv from "dotenv";
@@ -9,13 +8,9 @@ import dotenv from "dotenv";
 import userRouter from './app/routes/user.route';
 import exerciseRouter from './app/routes/exercise.route';
 import routineRouter from './app/routes/routine.route';
+import { corsOptions } from './app/config/corsOptions';
 
 dotenv.config()
-
-export const corsOptions: CorsOptions = {
-  origin: process.env.CORS_URL,
-  credentials: true,
-};
 
 const app: Application = express();
 
@@ -24,7 +19,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// app.use(helmet())
+
 const common_prefix = "/api"
 app.use(common_prefix, userRouter);
 app.use(common_prefix,routineRouter);

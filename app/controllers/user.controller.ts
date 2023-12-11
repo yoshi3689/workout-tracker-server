@@ -30,7 +30,6 @@ export const login = async (req: Request, res: Response) => {
       }
     );
 
-
     res.cookie("jwt", refreshToken, {
       httpOnly: true,
       sameSite: 'none',
@@ -46,8 +45,6 @@ export const login = async (req: Request, res: Response) => {
 
 export const refresh = async (req: Request, res: Response) => {
   try {
-    // THE BELOW IS HOW TO ACCESS 'Authorization' cookie
-    // i was accessing the authorization header the entire time
     const cookies = req.cookies;
 
     if (!cookies?.jwt) {
@@ -76,9 +73,6 @@ export const refresh = async (req: Request, res: Response) => {
 export const register = async (req: Request, res: Response) => {
   try {
     await userServices.register(req.body);
-    // TODO: research the best practice for letting user log in after registration
-    // const foundUser = await userServices.login(req.body);
-    // res.status(200).send(foundUser);
     await sendEmail({
       from: "no-reply@example.com",
       to: `${req.body.email}`,

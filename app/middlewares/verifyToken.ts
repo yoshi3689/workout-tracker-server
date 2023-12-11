@@ -29,9 +29,3 @@ export const authorize = async (req: Request, res: Response, next: NextFunction)
   }
   
 }
-// const 
-// const config = require("../config/auth.config.js");
-// const db = require("../models");
-// const User = db.user;
-// const Role = db.role;
-
