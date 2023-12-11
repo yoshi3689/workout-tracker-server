@@ -12,7 +12,7 @@ import routineRouter from './app/routes/routine.route';
 
 dotenv.config()
 
-const corsOptions: CorsOptions = {
+export const corsOptions: CorsOptions = {
   origin: process.env.CORS_URL,
   credentials: true,
 };
