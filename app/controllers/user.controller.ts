@@ -1,11 +1,8 @@
 import { Request, Response } from 'express';
+
 import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
-
-
-// import { CustomRequest } from '../middlewares/verifyToken';
 import { sendEmail } from '../utils/sendEmail';
-import { CustomRequest } from '../middlewares/verifyToken';
 import { createEmailConfig } from '../config/email.config';
 
 export const signup = async (req: Request, res: Response) => {

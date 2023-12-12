@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
+import { sign, verify } from "jsonwebtoken";
 import { getErrorMessage } from '../utils/errors.util';
 import * as userServices from '../services/user.service';
 import { CustomRequest } from '../middlewares/verifyToken';
-import { sign } from "jsonwebtoken";
-import jwt from "jsonwebtoken";
+
 
 export const signin = async (req: Request, res: Response) => {
   let foundUser = null;
@@ -47,7 +47,7 @@ export const refresh = async (req: Request, res: Response) => {
       throw new Error("Refresh token not present in the request");
     } 
     
-    const tokenDecoded = jwt.verify(
+    const tokenDecoded = verify(
       cookies.jwt,
       process.env.REFRESH_TOKEN_SECRET
     );
