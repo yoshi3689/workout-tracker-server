@@ -1,18 +1,12 @@
-import nodemailer from "nodemailer";;
-
-export interface MailOptions {
-  from: string;
-  to : string;
-  subject : string;
-  text: string;
-}
+import nodemailer from "nodemailer";
+import { MailOptions } from "nodemailer/lib/json-transport";
+;
 
 //function to send email to the user
-export const sendEmail = async({from, to, subject, text}: MailOptions) => {
+export const sendEmail = async({to, subject, text}: MailOptions) => {
 
   try {
-    let mailOptions = ({
-      from,
+    let mailOptions: MailOptions = ({
       to,
       subject,
       text
@@ -27,13 +21,12 @@ export const sendEmail = async({from, to, subject, text}: MailOptions) => {
         pass: process.env.APPPASSWORD,
       },
     });
-
       //return the Transporter variable which has the sendMail method to send the mail
       //which is within the mailOptions
     return await Transporter.sendMail(mailOptions) 
   } catch (error) {
     console.error(error)
-    throw new Error("email send fail");
+    throw new Error("We failed to send an email verfication link to the email address on file.");
   }
     
 }

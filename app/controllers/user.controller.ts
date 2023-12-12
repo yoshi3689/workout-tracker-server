@@ -7,7 +7,7 @@ import jwt, { Secret, JwtPayload } from "jsonwebtoken";
 // import { CustomRequest } from '../middlewares/verifyToken';
 import { sendEmail } from '../utils/sendEmail';
 import { CustomRequest } from '../middlewares/verifyToken';
-// import jwt, { JwtPayload } from "jsonwebtoken";
+import { createEmailConfig } from '../config/emailConfig';
 
 export const login = async (req: Request, res: Response) => {
   let foundUser = null;
@@ -48,7 +48,7 @@ export const refresh = async (req: Request, res: Response) => {
     const cookies = req.cookies;
 
     if (!cookies?.jwt) {
-      throw new Error("refresh token not present in the request");
+      throw new Error("Refresh token not present in the request");
     } 
     
     const tokenDecoded = jwt.verify(
@@ -66,22 +66,16 @@ export const refresh = async (req: Request, res: Response) => {
   
   } catch (err) {
     console.error(err);
-    res.status(401).send(["You were not authenticated"]);
+    res.status(401).send("You were not authenticated");
   }
 }
 
 export const register = async (req: Request, res: Response) => {
   try {
-    await userServices.register(req.body);
-    await sendEmail({
-      from: "no-reply@example.com",
-      to: `${req.body.email}`,
-      subject: "Account Verification Link",
-      text: `Hello, ${req.body.username} Please verify your email by
-                clicking this link :
-                http://localhost:5001/verify-email/${req.body.username}`,
-    });
-    res.status(200).send("Inserted successfully and email sent");
+    const isRegistered = await userServices.register(req.body);
+    const emailRes = await sendEmail(createEmailConfig(req.body.email, req.body.username));
+    console.log(emailRes);
+    res.status(200).send("Account Successfully Created! An email verification link was sent to the email address on file. Please Verify your email to log in.");
   } catch (error) {
     return res.status(500).send(getErrorMessage(error));
   }
@@ -90,10 +84,8 @@ export const register = async (req: Request, res: Response) => {
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
-
-    //find user by username and update isEmailVerified to true
     await userServices.emailVerify(username);
-    return res.status(200).send({ message: "your email is verified! Proceed to login" });
+    return res.status(200).send({ message: "Congrats! Your email is verified. Please proceed to login (:" });
   } catch (error) {
     console.error(error);
     return res.status(500).send(getErrorMessage(error));
