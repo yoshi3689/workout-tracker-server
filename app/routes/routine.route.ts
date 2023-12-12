@@ -7,8 +7,8 @@ const routineRouter = Router();
 
 routineRouter.use(verifyToken);
 
-routineRouter.get('/routines/:username', getRoutines);
-routineRouter.post("/routines/", createRoutine);
-routineRouter.patch("/routines/", updateRoutine);
+routineRouter.get('/:username', getRoutines);
+routineRouter.post("/", createRoutine);
+routineRouter.patch("/", updateRoutine);
 
 export default routineRouter

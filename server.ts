@@ -2,13 +2,16 @@ import express, { Application } from 'express'
 import cors from 'cors';
 import cookieParser from "cookie-parser";
 import mongoose from 'mongoose';
-import { initial } from './app/models/role.model';
 import dotenv from "dotenv";
 
 import userRouter from './app/routes/user.route';
-import exerciseRouter from './app/routes/exercise.route';
 import routineRouter from './app/routes/routine.route';
-import { corsOptions } from './app/config/corsOptions';
+import authRouter from './app/routes/auth.route';
+
+import { corsOptions } from './app/config/cors.config';
+import { COMMON_PREFIX, R_R_PREFIX, U_R_PREFIX, A_R_PREFIX } from './app/config/paths.config';
+
+
 
 dotenv.config()
 
@@ -20,16 +23,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const common_prefix = "/api"
-app.use(common_prefix, userRouter);
-app.use(common_prefix,routineRouter);
-app.use(common_prefix, exerciseRouter);
+app.use(COMMON_PREFIX + U_R_PREFIX, userRouter);
+app.use(COMMON_PREFIX + R_R_PREFIX, routineRouter);
+app.use(COMMON_PREFIX + A_R_PREFIX, authRouter)
 
 mongoose
   .connect(process.env.URL)
   .then(() => {
     console.log("Successfully connect to MongoDB.");
-    initial();
   })
   .catch((err) => {
     console.error("Connection error", err);
