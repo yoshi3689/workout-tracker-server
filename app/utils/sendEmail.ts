@@ -23,10 +23,10 @@ export const sendEmail = async({to, subject, text}: MailOptions) => {
     });
       //return the Transporter variable which has the sendMail method to send the mail
       //which is within the mailOptions
-    return await Transporter.sendMail(mailOptions) 
+    const res = await Transporter.sendMail(mailOptions);
+    if (!res.accepted) throw new Error(res.response);
   } catch (error) {
-    console.error(error)
-    throw new Error("We failed to send an email verfication link to the email address on file.");
+    throw error;
   }
     
 }

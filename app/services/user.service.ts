@@ -1,24 +1,39 @@
+import validate from "deep-email-validator";
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
+import { OutputFormat } from "deep-email-validator/dist/output/output";
 
-export interface SignedInUser {
-  user: IUser;
-  token: string;
+export const validateEmail = async (email : string) => {
+  let res: OutputFormat;
+  try {
+    const u = await User.findOne({ email });
+    if (u) throw new Error("The email is already in use by another acccount");
+    res = await validate({
+    email,
+    validateRegex: true,
+    validateMx: true,
+    validateTypo: true,
+    validateDisposable: true,
+    validateSMTP: true,
+    });
+    if (!res.valid) throw new Error(res.reason);
+  } catch (err) {
+    throw err;
+  }
 }
 
-export const register = async (user: IUser): Promise<Boolean> => {
+export const register = async (user: IUser) => {
   try {
     // TODO: how to make a column unchangeable once the document is created -- for createdAt column
     const now = new Date();
-    const res = await User.create({
+    await User.create({
       ...user,
       createdAt: now,
       lastActiveAt: now,
       routines: null,
     });
-    return res != null;
   } catch (err) {
-    console.error(err)
+    console.error(err);
     throw err;
   }
 }
@@ -38,9 +53,7 @@ export const login = async (user: IUser): Promise<IUser> => {
     const res = await User.findOneAndUpdate(
       { username: user.username },
       { $set: { lastActiveAt: new Date() } },
-      {
-        new: true
-      }
+      { new: true }
       );
     
     if (!res) {
@@ -65,10 +78,8 @@ export const emailVerify = async (username: string) => {
     const res = await User.findOneAndUpdate(
       { username },
       { $set: { isEmailVerified: true } },
-      {
-        new: true
-      }
-      );
+      { new: true }
+    );
     
     if (!res) {
       throw new Error("email verification failed");
