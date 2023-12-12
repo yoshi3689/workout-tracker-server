@@ -13,6 +13,6 @@ export const createEmailConfig = (email: string, username: string): MailOptions 
       text: `Hello ${username},
       Thank you for signing up with us! 
       Please verify your email by clicking this link.
-      ${allowedOrigins[1]}/verify-email/${username}`,
+      ${allowedOrigins[1]}/verify-email/${Buffer.from(username).toString("base64url")}`,
     }
 }
