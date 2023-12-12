@@ -14,8 +14,6 @@ export interface IUser {
 };
 
 const userSchema = new Schema<IUser>({
-  // not setting username as a PK
-  // cuz it is changeable
   username: String,
   email: String,
   password: String,

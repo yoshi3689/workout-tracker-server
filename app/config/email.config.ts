@@ -1,18 +1,27 @@
+import { sign } from "jsonwebtoken";
 import { allowedOrigins } from "./allowedOrigins";
-
-interface MailOptions {
-  to : string;
-  subject : string;
-  text: string;
-}
+import { randomBytes } from "crypto";
+import { MailOptions } from "nodemailer/lib/sendmail-transport";
 
 export const createEmailConfig = (email: string, username: string): MailOptions => {
+  const verificationCode = randomBytes(6).toString("hex");
   return {
+      from: process.env.EMAIL,
       to: `${email}`,
       subject: "Account Verification Link",
-      text: `Hello ${username},
-      Thank you for signing up with us! 
-      Please verify your email by clicking this link.
-      ${allowedOrigins[1]}/verify-email/${Buffer.from(username).toString("base64url")}`,
+      text: `Hi ${username},
+      
+      Thank you for signing up with us! We are excited to be alongside
+      with you for yout fitness journey (:
+      Please use this 6 digit code in the below link to verify your email,
+      and verify your email via this link.
+      
+      ${verificationCode}
+    
+      ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/verify-email/${sign(username, verificationCode)}
+      
+
+      Sweat Snap Support Team
+      `,
     }
 }

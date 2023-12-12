@@ -22,9 +22,9 @@ export const signup = async (req: Request, res: Response) => {
 
 export const verifyEmail = async (req: Request, res: Response) => {
   try {
-    const username = req.params.username;
-    await userServices.emailVerify(username);
-    return res.status(200).send({ message: "Congrats! Your email is verified. Please proceed to signin (:" });
+    const userInfoEncoded = req.params.userInfoEncoded;
+    await userServices.verifyEmail(userInfoEncoded, req.body.code);
+    return res.status(200).send({ message: "Congrats! Your email is verified. Please proceed to sign in (:" });
   } catch (error) {
     console.error(error);
     return res.status(500).send(getErrorMessage(error));

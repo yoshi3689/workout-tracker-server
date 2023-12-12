@@ -2,6 +2,7 @@ import validate from "deep-email-validator";
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
 import { OutputFormat } from "deep-email-validator/dist/output/output";
+import { verify, JwtPayload } from "jsonwebtoken";
 
 export const validateEmail = async (email : string) => {
   let res: OutputFormat;
@@ -9,13 +10,15 @@ export const validateEmail = async (email : string) => {
     const u = await User.findOne({ email });
     if (u) throw new Error("The email is already in use by another acccount");
     res = await validate({
-    email,
+    email: email,
+    sender: email,
     validateRegex: true,
     validateMx: true,
     validateTypo: true,
     validateDisposable: true,
-    validateSMTP: true,
-    });
+    validateSMTP: false,
+  });
+    console.log(res)
     if (!res.valid) throw new Error(res.reason);
   } catch (err) {
     throw err;
@@ -73,17 +76,22 @@ export const login = async (user: IUser): Promise<IUser> => {
   }
 };
 
-export const emailVerify = async (username: string) => {
+export const verifyEmail = async (userInfoEncoded: string, verificationCode: string) => {
   try {
+    const decoded = verify(
+    userInfoEncoded,
+    verificationCode,
+    );
+
     const res = await User.findOneAndUpdate(
-      { username },
+      { username:decoded },
       { $set: { isEmailVerified: true } },
       { new: true }
     );
+    console.log(res);
+    if (!res) throw new Error("cannot update email verification status");
     
-    if (!res) {
-      throw new Error("email verification failed");
-    }
+    
 
     return;
   } catch (err) {

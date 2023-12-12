@@ -13,6 +13,6 @@ userRouter.post(
   userController.signup
 );
 
-userRouter.get("/verify-email/:usernameEncoded", userController.verifyEmail);
+userRouter.post("/verify-email/:userInfoEncoded", userController.verifyEmail);
 
 export default userRouter;
