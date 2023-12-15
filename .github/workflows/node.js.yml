@@ -37,5 +37,5 @@ jobs:
         TARGET: ${{ secrets.REMOTE_TARGET }}
         SCRIPT_AFTER: |
           sudo pm2 stop 0
-          cd ./build && sudo pm2 start server.js
+          cd /home/ubuntu/build && sudo pm2 start server.js
           sudo systemctl restart

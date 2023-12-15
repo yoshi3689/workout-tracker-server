@@ -28,7 +28,7 @@ app.use(COMMON_PREFIX + R_R_PREFIX, routineRouter);
 app.use(COMMON_PREFIX + A_R_PREFIX, authRouter)
 
 mongoose
-  .connect(process.env.URL)
+  .connect(process.env.MONGO_C_STRING)
   .then(() => {
     console.log("Successfully connect to MongoDB.");
   })

@@ -1,6 +1,6 @@
 namespace NodeJS {
   interface ProcessEnv {
-    URL: string;
+    MONGO_C_STRING: string;
     CORS_URL: string;
     NODE_ENV: "development" | "production";
     PORT?: string;
