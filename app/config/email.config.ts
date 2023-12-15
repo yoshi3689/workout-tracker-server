@@ -3,7 +3,7 @@ import { allowedOrigins } from "./allowedOrigins";
 import { randomBytes } from "crypto";
 import { MailOptions } from "nodemailer/lib/sendmail-transport";
 
-export const createEmailConfig = (email: string, username: string): MailOptions => {
+export const createVerificationEmail = (email: string, username: string): MailOptions => {
   const verificationCode = randomBytes(6).toString("hex");
   return {
       from: process.env.EMAIL,
@@ -17,11 +17,16 @@ export const createEmailConfig = (email: string, username: string): MailOptions 
       and verify your email via this link.
       
       ${verificationCode}
+
+      If you do not know why you recieved this email, please report
+      to the support team.
     
       ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/verify-email/${sign(username, verificationCode)}
       
 
       Sweat Snap Support Team
+      
+      xxx-xxxx-xxx
       `,
     }
 }

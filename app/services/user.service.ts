@@ -7,7 +7,7 @@ import { verify, JwtPayload } from "jsonwebtoken";
 export const validateEmail = async (email : string) => {
   let res: OutputFormat;
   try {
-    const u = await User.findOne({ email });
+    const u = await findByEmail(email);
     if (u) throw new Error("The email is already in use by another acccount");
     res = await validate({
     email: email,
@@ -44,8 +44,18 @@ export const register = async (user: IUser) => {
 export const findByUsername = async (username: string): Promise<IUser> => {
   try {
     const res = await User.findOne({ username });
-    if (!res) throw new Error("user not found");
+    if (!res) throw new Error("user with this username not found");
     return res 
+  } catch (err) {
+    throw err;
+  }
+}
+
+export const findByEmail = async (email: string): Promise<IUser> => {
+  try {
+    const res = await User.findOne({ email });
+    if (!res) throw new Error("user with this email not found");
+    return res;
   } catch (err) {
     throw err;
   }

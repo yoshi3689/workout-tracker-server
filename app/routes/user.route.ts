@@ -14,5 +14,6 @@ userRouter.post(
 );
 
 userRouter.post("/verify-email/:userInfoEncoded", userController.verifyEmail);
+userRouter.post("/resend-email/", userController.resendVerificationEmail);
 
 export default userRouter;
