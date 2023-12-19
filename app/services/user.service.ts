@@ -68,7 +68,7 @@ export const login = async (user: IUser): Promise<IUser> => {
       { $set: { lastActiveAt: new Date() } },
       { new: true }
       );
-    
+    console.log(res+ " is found");
     if (!res) {
       throw new Error("username incorrect");
     }

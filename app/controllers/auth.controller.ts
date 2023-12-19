@@ -9,6 +9,7 @@ export const signin = async (req: Request, res: Response) => {
   let foundUser = null;
   try {
     foundUser = await userServices.login(req.body);
+
     if (!foundUser) return res.status(403).send(foundUser);
     const accessToken = sign(
       { username: foundUser.username },
@@ -35,7 +36,8 @@ export const signin = async (req: Request, res: Response) => {
     );
     return res.status(201).send({accessToken});
   } catch (error) {
-    return res.status(500).send(getErrorMessage(error));
+    console.log(getErrorMessage(error));
+    res.status(403).send({message:getErrorMessage(error)});
   }
 };
 
@@ -62,7 +64,8 @@ export const refresh = async (req: Request, res: Response) => {
   
   } catch (err) {
     console.error(err);
-    res.status(401).send("You were not authenticated");
+    res.statusMessage = "You were not authenticated";
+    res.status(401).send();
   }
 }
 

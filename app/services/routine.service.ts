@@ -20,7 +20,9 @@ export const update = async (routine: IRoutine): Promise<Boolean> => {
       {
         name: routine.name,
         isEditing: routine.isEditing, 
-        exercises: routine.exercises
+        exercises: routine.exercises,
+        muscleGroups: routine.muscleGroups,
+        
     });
     return res != null;
   } catch (err) {

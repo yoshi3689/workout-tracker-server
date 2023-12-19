@@ -8,6 +8,7 @@ export interface IRoutine {
   createdAt: Date;
   isEditing: boolean;
   exercises: IExercise[];
+  muscleGroups: Set<string>;
 }
 
 const RoutineSchema = new Schema<IRoutine>({
@@ -16,7 +17,8 @@ const RoutineSchema = new Schema<IRoutine>({
   username: String,
   createdAt: Date,
   isEditing: Boolean,
-  exercises: [ExerciseSchema]
+  exercises: [ExerciseSchema],
+  muscleGroups: Set<String>,
 });
 
 export const Routine = model(
