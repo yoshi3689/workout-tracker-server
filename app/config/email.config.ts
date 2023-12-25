@@ -16,13 +16,42 @@ export const createVerificationEmail = (email: string, username: string): MailOp
       Please use this 6 digit code in the below link to verify your email,
       and verify your email via this link.
       
+      Code: 
       ${verificationCode}
-
-      If you do not know why you recieved this email, please report
-      to the support team.
     
+      Link: 
       ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/verify-email/${sign(username, verificationCode)}
       
+      If you do not know why you recieved this email, please report
+      to the support team.
+
+      Sweat Snap Support Team
+      
+      xxx-xxxx-xxx
+      `,
+    }
+}
+
+export const createPWResetEmail = (email: string, username: string): MailOptions => {
+  const verificationCode = randomBytes(6).toString("hex");
+  return {
+      from: process.env.EMAIL,
+      to: `${email}`,
+      subject: "Account Password Reset Link",
+      text: `Hi there,
+      
+      Thank you for being with us for your fitness journey!
+
+      Please reset your password via the link below .
+      
+      Code: 
+      ${verificationCode}
+    
+      Link: 
+      ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/verify-email/${sign(username, verificationCode)}
+      
+      If you do not know why you recieved this email, please report
+      to the support team.
 
       Sweat Snap Support Team
       

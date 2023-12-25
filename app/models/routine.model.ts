@@ -8,17 +8,17 @@ export interface IRoutine {
   createdAt: Date;
   isEditing: boolean;
   exercises: IExercise[];
-  muscleGroups: Set<string>;
+  muscleGroups: string[];
 }
 
 const RoutineSchema = new Schema<IRoutine>({
   _id: Schema.Types.ObjectId,
-  name: { type: String, required:true },
+  name: String,
   username: String,
   createdAt: Date,
   isEditing: Boolean,
   exercises: [ExerciseSchema],
-  muscleGroups: Set<String>,
+  muscleGroups: [String],
 });
 
 export const Routine = model(

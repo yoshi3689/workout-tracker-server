@@ -1,33 +1,9 @@
-import validate from "deep-email-validator";
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
-import { OutputFormat } from "deep-email-validator/dist/output/output";
 import { verify, JwtPayload } from "jsonwebtoken";
-
-export const validateEmail = async (email : string) => {
-  let res: OutputFormat;
-  try {
-    const u = await findByEmail(email);
-    if (u) throw new Error("The email is already in use by another acccount");
-    res = await validate({
-    email: email,
-    sender: email,
-    validateRegex: true,
-    validateMx: true,
-    validateTypo: true,
-    validateDisposable: true,
-    validateSMTP: false,
-  });
-    console.log(res)
-    if (!res.valid) throw new Error(res.reason);
-  } catch (err) {
-    throw err;
-  }
-}
 
 export const register = async (user: IUser) => {
   try {
-    // TODO: how to make a column unchangeable once the document is created -- for createdAt column
     const now = new Date();
     await User.create({
       ...user,
@@ -51,10 +27,30 @@ export const findByUsername = async (username: string): Promise<IUser> => {
   }
 }
 
-export const findByEmail = async (email: string): Promise<IUser> => {
+export const updateByUsername = async (userToUpdate: IUser): Promise<IUser> => {
+  try {
+    if (!userToUpdate.password) {
+      const res = await User.findOneAndUpdate(
+        { username: userToUpdate.username },
+      { $set: { lastActiveAt: new Date(), email: userToUpdate.email } },
+      { new: true }
+    );
+    }
+    const res = await User.findOneAndUpdate(
+      { username: userToUpdate.username },
+      { $set: { lastActiveAt: new Date(), password: userToUpdate.password, email: userToUpdate.email } },
+      { new: true }
+    );
+    if (!res) throw new Error("user with this username not found");
+    return res 
+  } catch (err) {
+    throw err;
+  }
+}
+
+export const findByEmail = async (email: string): Promise<IUser | null> => {
   try {
     const res = await User.findOne({ email });
-    if (!res) throw new Error("user with this email not found");
     return res;
   } catch (err) {
     throw err;
@@ -86,23 +82,34 @@ export const login = async (user: IUser): Promise<IUser> => {
   }
 };
 
-export const verifyEmail = async (userInfoEncoded: string, verificationCode: string) => {
+export const verifyEmail = async (usernameEncoded: string, code: string) => {
   try {
-    const decoded = verify(
-    userInfoEncoded,
-    verificationCode,
-    );
-
+    const decoded = verify(usernameEncoded, code);
     const res = await User.findOneAndUpdate(
-      { username:decoded },
+      { username: decoded },
       { $set: { isEmailVerified: true } },
       { new: true }
     );
     console.log(res);
     if (!res) throw new Error("cannot update email verification status");
     
-    
+    return;
+  } catch (err) {
+    throw err;
+  }
+};
 
+export const resetPassword = async (password: string, usernameEncoded: string, code: string) => {
+  try {
+    const decoded = verify(usernameEncoded, code);
+    const res = await User.findOneAndUpdate(
+      { username: decoded },
+      { $set: { password } },
+      { new: true }
+    );
+    console.log(res);
+    if (!res) throw new Error("cannot update email verification status");
+    
     return;
   } catch (err) {
     throw err;

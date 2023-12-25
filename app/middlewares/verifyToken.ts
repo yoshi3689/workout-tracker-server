@@ -10,7 +10,9 @@ export interface CustomRequest extends Request {
 
 // check if the valid access token is present
 export const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+  console.log("about to check token")
   const authHeader = req.headers.authorization! as string || req.headers.Authorization! as string;
+  console.log(req.headers, authHeader)
   if (!authHeader?.includes("Bearer ")) {
     res.status(401).send("You were not authenticated");
   }

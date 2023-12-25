@@ -16,7 +16,7 @@ export interface IUser {
 const userSchema = new Schema<IUser>({
   username: String,
   email: String,
-  password: String,
+  password: {type: String, required: true},
   refreshToken: String,
   createdAt: Date,
   lastActiveAt: Date,
