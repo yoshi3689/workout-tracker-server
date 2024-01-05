@@ -1,5 +1,5 @@
-import { Routine, IRoutine } from "../models/routine.model"
-import { IExerciseRecord, IPersonalRecord } from "../models/exercise.model";
+import { Routine } from "../models/routine.model"
+import { IExerciseRecordMongoaggregate, IPersonalRecord,  } from "../models/exercise.model";
 
 export const getExercisesSortedByMaxWeight = async (username: string): Promise<IPersonalRecord[]> => {
   try {
@@ -10,47 +10,47 @@ export const getExercisesSortedByMaxWeight = async (username: string): Promise<I
         }
       },
       {
-        $unwind: "$exercises" // Deconstruct the exercises array within each routine
+        $unwind: "$exercises"
       },
       {
         $sort: {
-          "exercises.maxWeight": -1 // Sort exercises by maxWeight in descending order
+          "exercises.maxWeight": -1
         }
       },
       {
         $group: {
-          _id: {
-            exerciseName: "$exercises.name",
-            routineDate: "$createdAt" // Assuming createdAt is the date field in the routine
-          },
+          _id: "$exercises.name",
           maxWeight: { $first: "$exercises.maxWeight" },
-          exercise: { $first: "$exercises" } // Keep the entire exercise object for later projection
+          exercise: { $first: "$exercises" },
+          routineDate: { $first: "$createdAt" } // Assuming createdAt is the date field in the routine
+        }
+      },
+      {
+        $sort: {
+          maxWeight: -1 // Sort by maxWeight in descending order
         }
       },
       {
         $group: {
-          _id: "$_id.exerciseName",
-          routineDate: { $first: "$_id.routineDate" },
-          maxWeight: { $max: "$maxWeight" },
-          count: { $sum: 1 }, // Count occurrences of the same exercise name
+          _id: "$_id",
+          routineDate: { $first: "$routineDate" },
+          maxWeight: { $first: "$maxWeight" },
+          count: { $sum: 1 },
           exercises: {
-            $push: {
-              maxWeight: "$maxWeight",
-              exercise: "$exercise"
-            }
+            $push: "$exercise"
           }
         }
       },
       {
         $sort: {
-          count: -1 // Sort by the count of the same exercise name in descending order
+          count: -1
         }
       },
       {
-        $unwind: "$exercises" // Deconstruct the exercises array within the grouped result
+        $unwind: "$exercises"
       },
       {
-        $replaceRoot: { newRoot: "$exercises.exercise" } // Promote the exercise object to the root level
+        $replaceRoot: { newRoot: "$exercises" }
       },
       {
         $project: {
@@ -64,6 +64,7 @@ export const getExercisesSortedByMaxWeight = async (username: string): Promise<I
         }
       }
     ]);
+
     return result;
   } catch (err) {
     console.error(err);
@@ -71,9 +72,9 @@ export const getExercisesSortedByMaxWeight = async (username: string): Promise<I
   }
 }
 
-export const getExercisesOrderedByDate = async (username: string): Promise<IExerciseRecord[][]> => {
+export const getExercisesOrderedByDate = async (username: string): Promise<IExerciseRecordMongoaggregate[]> => {
   try {
-    const result: IExerciseRecord[][] = await Routine.aggregate([
+    const result: IExerciseRecordMongoaggregate[] = await Routine.aggregate([
       {
         $match: {
           username
@@ -83,13 +84,8 @@ export const getExercisesOrderedByDate = async (username: string): Promise<IExer
         $unwind: "$exercises" // Deconstruct the exercises array within each routine
       },
       {
-        $sort: {
-          "createdAt": 1 // Sort routines by createdAt in ascending order
-        }
-      },
-      {
         $group: {
-          _id: "$exercises.name",
+          _id: "$exercises.name", // Group by exercise name
           exercises: {
             $push: {
               maxWeight: "$exercises.maxWeight",
@@ -102,21 +98,30 @@ export const getExercisesOrderedByDate = async (username: string): Promise<IExer
       {
         $project: {
           _id: 0,
-          ["$_id"]: {
-            $map: {
-              input: "$exercises",
-              as: "exercise",
-              in: {
-                maxWeight: "$$exercise.maxWeight",
-                sets: "$$exercise.sets",
-                routineDate: "$$exercise.routineDate"
-              }
-            }
+          exerciseName: "$_id", // Rename _id to exerciseName
+          exercises: {
+            $slice: [
+              {
+                $map: {
+                  input: "$exercises", // Map over the exercises array
+                  as: "exercise",
+                  in: {
+                    maxWeight: "$$exercise.maxWeight",
+                    sets: "$$exercise.sets",
+                    routineDate: "$$exercise.routineDate"
+                  }
+                }
+              },
+              { $size: "$exercises" } // Ensure the resulting array has the same length as the original exercises array
+            ]
           }
         }
       }
     ]);
+
     console.log(result);
+
+
     return result;
   } catch (err) {
     console.error(err);
