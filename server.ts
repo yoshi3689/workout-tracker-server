@@ -9,7 +9,8 @@ import routineRouter from './app/routes/routine.route';
 import authRouter from './app/routes/auth.route';
 
 import { corsOptions } from './app/config/cors.config';
-import { COMMON_PREFIX, R_R_PREFIX, U_R_PREFIX, A_R_PREFIX } from './app/config/paths.config';
+import { COMMON_PREFIX, R_R_PREFIX, U_R_PREFIX, A_R_PREFIX, E_R_PREFIX } from './app/config/paths.config';
+import exerciseRouter from './app/routes/exercise.route';
 
 
 
@@ -25,6 +26,7 @@ app.use(cookieParser());
 
 app.use(COMMON_PREFIX + U_R_PREFIX, userRouter);
 app.use(COMMON_PREFIX + R_R_PREFIX, routineRouter);
+app.use(COMMON_PREFIX + E_R_PREFIX, exerciseRouter);
 app.use(COMMON_PREFIX + A_R_PREFIX, authRouter)
 
 mongoose

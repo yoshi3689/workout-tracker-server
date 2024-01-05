@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { getErrorMessage } from '../utils/errors.util';
-import { create, getAll, update } from '../services/routine.service';
+import { create, getAll, getExercisesByPR, update } from '../services/routine.service';
 
 export const getRoutines = async (req: Request, res: Response) => {
   try {
@@ -16,6 +16,8 @@ export const getRoutines = async (req: Request, res: Response) => {
 
 export const createRoutine = async (req: Request, res: Response) => {
   try {
+    console.log("about to create");
+    
     create(req.body);
     res.status(200).send({ message: "created a new routine" },);
   } catch (error) {

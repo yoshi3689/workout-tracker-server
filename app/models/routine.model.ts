@@ -18,7 +18,7 @@ const RoutineSchema = new Schema<IRoutine>({
   createdAt: Date,
   isEditing: Boolean,
   exercises: [ExerciseSchema],
-  muscleGroups: [String],
+  muscleGroups: [String]
 });
 
 export const Routine = model(
