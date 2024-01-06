@@ -1,5 +1,5 @@
 import { Routine } from "../models/routine.model"
-import { IExerciseRecordMongoaggregate, IPersonalRecord,  } from "../models/exercise.model";
+import { IExerciseLiftableWeight, IPersonalRecord,  } from "../models/exercise.model";
 
 export const getExercisesSortedByMaxWeight = async (username: string): Promise<IPersonalRecord[]> => {
   try {
@@ -72,53 +72,46 @@ export const getExercisesSortedByMaxWeight = async (username: string): Promise<I
   }
 }
 
-export const getExercisesOrderedByDate = async (username: string): Promise<IExerciseRecordMongoaggregate[]> => {
+export const getExercisesOrderedByDate = async (username: string): Promise<IExerciseLiftableWeight[]> => {
   try {
-    const result: IExerciseRecordMongoaggregate[] = await Routine.aggregate([
+    const result: IExerciseLiftableWeight[] = await Routine.aggregate([
       {
         $match: {
           username
         }
       },
       {
-        $unwind: "$exercises" // Deconstruct the exercises array within each routine
+        $unwind: "$exercises"
       },
       {
         $group: {
-          _id: "$exercises.name", // Group by exercise name
-          exercises: {
-            $push: {
-              maxWeight: "$exercises.maxWeight",
-              sets: "$exercises.sets",
-              routineDate: "$createdAt" // Assuming createdAt is the date field in the routine
-            }
+          _id: "$exercises.name",
+          liftableWeights: {
+            $push: "$exercises.maxWeight"
+          },
+          dates: {
+            $push: "$createdAt"
+          },
+          count: {
+            $sum: 1  // Count occurrences of the same exercise name
           }
+        }
+      },
+      {
+        $sort: {
+          count: -1  // Sort by the count of the same exercise name in descending order
         }
       },
       {
         $project: {
           _id: 0,
-          exerciseName: "$_id", // Rename _id to exerciseName
-          exercises: {
-            $slice: [
-              {
-                $map: {
-                  input: "$exercises", // Map over the exercises array
-                  as: "exercise",
-                  in: {
-                    maxWeight: "$$exercise.maxWeight",
-                    sets: "$$exercise.sets",
-                    routineDate: "$$exercise.routineDate"
-                  }
-                }
-              },
-              { $size: "$exercises" } // Ensure the resulting array has the same length as the original exercises array
-            ]
-          }
+          exerciseName: "$_id",
+          liftableWeights: "$liftableWeights",
+          dates: "$dates",
+          count: "$count"
         }
       }
     ]);
-
     console.log(result);
 
 

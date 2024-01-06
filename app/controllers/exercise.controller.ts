@@ -14,7 +14,7 @@ export const getPersonalRecords = async (req: Request, res: Response) => {
   }
 };
 
-export const getExerciseRecords = async (req: Request, res: Response) => {
+export const getLiftableWeightsByExercise = async (req: Request, res: Response) => {
   try {
     const username = req.params.username;
     const exercises = await getExercisesOrderedByDate(username);

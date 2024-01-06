@@ -18,9 +18,11 @@ type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 export interface IExerciseRecord extends Omit<IExercise, 'name'> {
 }
 
-export interface IExerciseRecordMongoaggregate {
+export interface IExerciseLiftableWeight {
   exerciseName: string;
-  exercises: IExerciseRecord[];
+  liftableWeights: number[];
+  dates: string[];
+  count: number;
 }
 
 

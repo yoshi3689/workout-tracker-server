@@ -8,7 +8,6 @@ const routineRouter = Router();
 routineRouter.use(verifyToken);
 
 routineRouter.get('/:username', getRoutines);
-// routineRouter.get('/:username/prs', getPRs);
 routineRouter.post("/", createRoutine);
 routineRouter.patch("/", updateRoutine);
 

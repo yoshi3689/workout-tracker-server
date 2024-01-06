@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { getErrorMessage } from '../utils/errors.util';
-import { create, getAll, getExercisesByPR, update } from '../services/routine.service';
+import { create, getAll, update } from '../services/routine.service';
 
 export const getRoutines = async (req: Request, res: Response) => {
   try {
