@@ -1,6 +1,7 @@
 import { User, IUser } from "../models/user.model"
 import { compareSync } from "bcrypt";
 import { verify, JwtPayload } from "jsonwebtoken";
+import { CallbackError, Document } from "mongoose";
 
 export const register = async (user: IUser) => {
   try {
@@ -48,6 +49,22 @@ export const updateByUsername = async (userToUpdate: IUser): Promise<IUser> => {
   }
 }
 
+export const findByEmailOrUsername = async (
+  email: string,
+  username: string
+): Promise<IUser | null> => {
+  try {
+    const res = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+
 export const findByEmail = async (email: string): Promise<IUser | null> => {
   try {
     const res = await User.findOne({ email });
@@ -64,7 +81,6 @@ export const login = async (user: IUser): Promise<IUser> => {
       { $set: { lastActiveAt: new Date() } },
       { new: true }
       );
-    console.log(res+ " is found");
     if (!res) {
       throw new Error("username incorrect");
     }
@@ -90,7 +106,6 @@ export const verifyEmail = async (usernameEncoded: string, code: string) => {
       { $set: { isEmailVerified: true } },
       { new: true }
     );
-    console.log(res);
     if (!res) throw new Error("cannot update email verification status");
     
     return;
@@ -102,14 +117,12 @@ export const verifyEmail = async (usernameEncoded: string, code: string) => {
 export const resetPassword = async (password: string, usernameEncoded: string, code: string) => {
   try {
     const decoded = verify(usernameEncoded, code);
-    const res = await User.findOneAndUpdate(
+    const res = await User.findOne(
       { username: decoded },
-      { $set: { password } },
-      { new: true }
-    );
-    console.log(res);
-    if (!res) throw new Error("cannot update email verification status");
-    
+    )
+    if (!res) throw new Error("user not found");
+    res.password = password;
+    await res.save();
     return;
   } catch (err) {
     throw err;

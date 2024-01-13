@@ -16,8 +16,6 @@ export const getRoutines = async (req: Request, res: Response) => {
 
 export const createRoutine = async (req: Request, res: Response) => {
   try {
-    console.log("about to create");
-    
     create(req.body);
     res.status(200).send({ message: "created a new routine" },);
   } catch (error) {

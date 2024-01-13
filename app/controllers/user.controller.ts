@@ -8,9 +8,10 @@ import { validateEmail } from '../utils/validateEmail';
 import { verify } from 'jsonwebtoken';
 
 export const signup = async (req: Request, res: Response) => {
-  console.log(req)
   try {
     await validateEmail(req.body.email);
+    const found = await userServices.findByEmailOrUsername(req.body.email, req.body.username);
+    if (found) return res.status(400).send("User with the same username or email already exists");
     await userServices.register(req.body);
     await sendEmail(createVerificationEmail(req.body.email, req.body.username));
 
@@ -60,8 +61,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const userInfoEncoded = req.params.userInfoEncoded;
-    await userServices.resetPassword(req.params.password, userInfoEncoded, req.body.code);
+    await userServices.resetPassword(req.body.newPassword, req.body.userInfoEncoded, req.body.code);
     return res.status(200).send("Code is verified. Password is updated!");
   } catch (error) {
     console.error(error);
@@ -70,11 +70,8 @@ export const resetPassword = async (req: Request, res: Response) => {
 };
 
 export const getUser = async (req: Request, res: Response) => {
-  console.log("trying to fetch user")
   try {
-    console.log(req.params.username)
     const u = await userServices.findByUsername(req.params.username);
-    console.log(u)
     res.status(200).send(u);
   } catch (error) {
     console.error(error);
@@ -83,10 +80,8 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  console.log("trying to update user")
   try {
     const u = await userServices.findByUsername(req.body.user);
-    console.log("new user info: ", u);
     res.status(200).send(u);
   } catch (error) {
     console.error(error);

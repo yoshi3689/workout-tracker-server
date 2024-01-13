@@ -112,8 +112,6 @@ export const getExercisesOrderedByDate = async (username: string): Promise<IExer
         }
       }
     ]);
-    console.log(result);
-
 
     return result;
   } catch (err) {

@@ -2,7 +2,6 @@ import { Routine, IRoutine } from "../models/routine.model"
 
 export const create = async (routine: IRoutine): Promise<Boolean> => {
   try {
-    console.log("logging object from request: " + routine)
     const res = await Routine.create({
       ...routine, _id: null
     });

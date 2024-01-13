@@ -13,7 +13,7 @@ export const createVerificationEmail = (email: string, username: string): MailOp
       
       Thank you for signing up with us! We are excited to be alongside
       with you for yout fitness journey (:
-      Please use this 6 digit code in the below link to verify your email,
+      Please use this code in the below link to verify your email,
       and verify your email via this link.
       
       Code: 
@@ -48,7 +48,7 @@ export const createPWResetEmail = (email: string, username: string): MailOptions
       ${verificationCode}
     
       Link: 
-      ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/verify-email/${sign(username, verificationCode)}
+      ${process.env.NODE_ENV === "production" ? allowedOrigins[1] : allowedOrigins[0]}/reset-password/${sign(username, verificationCode)}
       
       If you do not know why you recieved this email, please report
       to the support team.

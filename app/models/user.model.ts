@@ -14,8 +14,8 @@ export interface IUser {
 };
 
 const userSchema = new Schema<IUser>({
-  username: String,
-  email: String,
+  username: {type: String, unique: true},
+  email: {type: String, unique: true},
   password: {type: String, required: true},
   refreshToken: String,
   createdAt: Date,
@@ -36,7 +36,7 @@ const saltRounds = 8
 
 userSchema.pre('save', async function (next) {
  const user = this;
- if (user.isModified('password')) {
+  if (user.isModified('password')) {
    user.password = await bcrypt.hash(user.password, saltRounds);
  }
  next();
