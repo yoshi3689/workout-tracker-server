@@ -3,6 +3,7 @@ import { allowedOrigins } from './allowedOrigins'
 
 export const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
+    console.log("the current origin is: ", origin)
     if (origin) {
       if (allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true)
